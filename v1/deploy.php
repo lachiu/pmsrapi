@@ -46,7 +46,7 @@ WorkingDirectory=' . project_path . '
 [Install]
 WantedBy=multi-user.target';
     file_put_contents('/etc/systemd/system/' . ms_name . '.service', $ini);
-    echo "🟢 " . ms_name . ".service has been created\n🚦 Reloading daemons";
+    echo "🟢 " . ms_name . ".service has been created\n🚦 Reloading daemons\n";
     exec("systemctl daemon-reload");
     echo "🚦 starting the service:\n";
     exec("systemctl start " . ms_name . ".service");
