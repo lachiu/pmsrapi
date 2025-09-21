@@ -10,3 +10,5 @@ v1/webhooks/logs/*.json
 v1/webhooks/queue/*.json
 v1/webhooks/queue.lock
 v1/webhooks/logs/*.json
+.megaignore
+Icon
