@@ -20,6 +20,7 @@ if (PHP_OS_FAMILY !== 'Linux') {
     die();
 }
 define("project_path", dirname(getcwd(), 1));
+
 echo "🪂 Deploying Microservice project in " . project_path . "\n";
 if (!file_exists(project_path . '/v1/config.php')) {
     echo "🟠 Please complete your config file first at " . project_path . "/v1/config.php\n";
@@ -42,7 +43,7 @@ Description=' . ms_description . '
 After=network.target
 
 [Service]
-Environment=PHP_CLI_SERVER_WORKERS=' . WORKER_COUNT . '
+Environment=PHP_CLI_SERVER_WORKERS=30
 ExecStart=/usr/bin/php -S ' . ms_secrets['http']['host'] . ':' . ms_secrets['http']['port'] . ' -t ' . project_path . '
 Restart=always
 User=root
