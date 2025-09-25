@@ -43,7 +43,7 @@ Description=' . ms_description . '
 After=network.target
 
 [Service]
-Environment=PHP_CLI_SERVER_WORKERS=' . WORKER_COUNT . '
+Environment=PHP_CLI_SERVER_WORKERS=30
 ExecStart=/usr/bin/php -S ' . ms_secrets['http']['host'] . ':' . ms_secrets['http']['port'] . ' -t ' . project_path . '
 Restart=always
 User=root
