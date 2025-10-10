@@ -1,4 +1,4 @@
-# PHP Micro Service REST API 0.0.19
+# PHP Micro Service REST API 0.0.20
 
 Yes! Yet another REST API built in PHP.
 
@@ -21,9 +21,9 @@ apt upgrade -y
 apt install unzip
 mkdir /home/my_microservice
 cd /home/my_microservice
-wget -q https://github.com/ruvenss/pmsrapi/archive/refs/tags/0.0.19.zip -O "pmsrapi.zip"
+wget -q https://github.com/ruvenss/pmsrapi/archive/refs/tags/0.0.20.zip -O "pmsrapi.zip"
 unzip -qq pmsrapi.zip && rm pmsrapi.zip
-mv pmsrapi-0.0.19/* /home/my_microservice
+mv pmsrapi-0.0.20/* /home/my_microservice
 ./install.sh
 ```
 
@@ -84,7 +84,7 @@ Your code should be created inside the following folders:
 - `/v1/POST/` &rarr; for end points using the POST Method (Creation/Insert)
 - `/v1/PUT/` &rarr; for end points using the PUT Method (Updates)
 
-Lets check this Basic *Example*
+Lets check this Basic _Example_
 
 - `/v1/GET/my_endpoint.php`:
 
