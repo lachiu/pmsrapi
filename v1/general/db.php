@@ -241,9 +241,10 @@ function sqlSelectRow($table, $fields, $where, $orderby = "")
  * @param string $where The WHERE clause for selection.
  * @param string $orderby Optional ORDER BY clause.
  * @param string $limit Optional LIMIT clause.
+ * @param string $groupby Optional GROUP BY clause.
  * @return array Returns an array of selected rows as associative arrays or an empty array on failure.
  */
-function sqlSelectRows($table, $fields, $where, $orderby = "", $limit = "")
+function sqlSelectRows($table, $fields, $where, $orderby = "", $limit = "", $groupby = "")
 {
     $rows = [];
     if (defined("dbconn")) {
@@ -251,6 +252,9 @@ function sqlSelectRows($table, $fields, $where, $orderby = "", $limit = "")
             $sqlquery = "SELECT $fields FROM `$table`";
             if (!empty($where)) {
                 $sqlquery .= " WHERE ($where)";
+            }
+            if (!empty($groupby)) {
+                $sqlquery .= " GROUP BY $groupby";
             }
             if (!empty($orderby)) {
                 $sqlquery .= " ORDER BY $orderby";
