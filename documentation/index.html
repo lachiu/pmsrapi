@@ -1,1 +1,1147 @@
-TODO Documentation
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete REST API documentation for PMSRAPI - PHP Micro Service REST API">
+    <title>PMSRAPI - REST API Documentation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary-color: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-code: #0d1117;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a202e 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary-light);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-light);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.1);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-light);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+
+        /* Method Badges */
+        .method-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .method-get {
+            background: var(--info);
+            color: white;
+        }
+
+        .method-post {
+            background: var(--success);
+            color: white;
+        }
+
+        .method-put {
+            background: var(--warning);
+            color: white;
+        }
+
+        .method-delete {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--bg-code);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        /* Endpoint Grid */
+        .endpoint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .endpoint-card {
+            background: var(--bg-card);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .endpoint-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -4px rgba(99, 102, 241, 0.2);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .endpoint-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        .endpoint-desc {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(245, 158, 11, 0.05));
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-light);
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-card);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--info);
+            color: #93c5fd;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: #6ee7b7;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+            color: #fcd34d;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            color: var(--text-secondary);
+        }
+
+        .footer-content a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-content a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Scroll Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>PMSRAPI</h1>
+                    <span class="version-badge">v0.0.21</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#authentication">Authentication</a></li>
+                        <li><a href="#endpoints">Endpoints</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                        <li><a href="https://github.com/ruvenss/pmsrapi">GitHub</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>PHP Micro Service REST API</h2>
+            <p>A powerful, lightweight REST API framework built with PHP for rapid microservice development</p>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="section">
+        <div class="container">
+            <h2 class="section-title">📚 Overview</h2>
+
+            <div class="card animate-in">
+                <h3>About PMSRAPI</h3>
+                <p>PMSRAPI is a PHP-based micro-service REST API framework designed for building scalable microservices
+                    with minimal configuration. It provides a simple yet powerful approach to creating REST APIs with
+                    built-in database operations, webhooks, file handling, and event management.</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">Fast & Lightweight</div>
+                    <div class="feature-desc">Built with performance in mind, minimal overhead</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-title">Secure</div>
+                    <div class="feature-desc">Bearer token authentication with configurable permissions</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🗄️</div>
+                    <div class="feature-title">Database Ready</div>
+                    <div class="feature-desc">MySQL/MariaDB support with built-in CRUD operations</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-title">Webhooks</div>
+                    <div class="feature-desc">Built-in webhook support for event-driven architecture</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📁</div>
+                    <div class="feature-title">File Handling</div>
+                    <div class="feature-desc">Upload and download files with base64 encoding</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Auto Updates</div>
+                    <div class="feature-desc">Automatic framework updates from GitHub releases</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authentication Section -->
+    <section id="authentication" class="section">
+        <div class="container">
+            <h2 class="section-title">🔐 Authentication</h2>
+
+            <div class="card">
+                <h3>Bearer Token Authentication</h3>
+                <p>All API requests require authentication using a Bearer token in the Authorization header.</p>
+
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>Authorization: Bearer YOUR_TOKEN_HERE</code></pre>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>ℹ️ Note:</strong> The token is configured during installation and stored in the parent
+                    directory configuration file.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Request Format</h3>
+                <p>All requests must use <code>Content-Type: application/json</code> and include a JSON body with the
+                    following structure:</p>
+
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>{
+    "function": "endpoint_name",
+    "parameters": {
+        // endpoint-specific parameters
+    },
+    "payload": {
+        // optional additional data
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Response Format</h3>
+                <p>All successful responses return a JSON object with the following structure:</p>
+
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>{
+    "success": true,
+    "data": {
+        "values": { ... },
+        "table_last_update": "2025-11-22 10:30:00"
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Endpoints Section -->
+    <section id="endpoints" class="section">
+        <div class="container">
+            <h2 class="section-title">📡 API Endpoints</h2>
+
+            <!-- GET Endpoints -->
+            <div class="card">
+                <h3><span class="method-badge method-get">GET</span> Read Operations</h3>
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">info</span>
+                        </div>
+                        <div class="endpoint-desc">Get microservice information, version, status, and configuration
+                            details</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">select_rows</span>
+                        </div>
+                        <div class="endpoint-desc">Select multiple rows from a database table with filtering and
+                            ordering</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">select_row</span>
+                        </div>
+                        <div class="endpoint-desc">Select a single row from a database table</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">count_rows</span>
+                        </div>
+                        <div class="endpoint-desc">Count rows in a table matching specified conditions</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">sum_rows</span>
+                        </div>
+                        <div class="endpoint-desc">Sum values of a specific field with WHERE conditions</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">select_plot</span>
+                        </div>
+                        <div class="endpoint-desc">Select data formatted for plotting/charting (X,Y coordinates)</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">tables_info</span>
+                        </div>
+                        <div class="endpoint-desc">Get information about all tables in the database</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">downloadfile</span>
+                        </div>
+                        <div class="endpoint-desc">Download a file from the server storage</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-name">webhooks</span>
+                        </div>
+                        <div class="endpoint-desc">List all configured webhooks for a specific method</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POST Endpoints -->
+            <div class="card">
+                <h3><span class="method-badge method-post">POST</span> Create Operations</h3>
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-post">POST</span>
+                            <span class="endpoint-name">insert</span>
+                        </div>
+                        <div class="endpoint-desc">Insert a new row into a database table</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-post">POST</span>
+                            <span class="endpoint-name">uploadfile</span>
+                        </div>
+                        <div class="endpoint-desc">Upload a file to server storage using base64 encoding</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-post">POST</span>
+                            <span class="endpoint-name">webhook_add</span>
+                        </div>
+                        <div class="endpoint-desc">Register a new webhook endpoint</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-post">POST</span>
+                            <span class="endpoint-name">universe_insert_node</span>
+                        </div>
+                        <div class="endpoint-desc">Insert data into another microservice node in the universe</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PUT Endpoints -->
+            <div class="card">
+                <h3><span class="method-badge method-put">PUT</span> Update Operations</h3>
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-put">PUT</span>
+                            <span class="endpoint-name">update</span>
+                        </div>
+                        <div class="endpoint-desc">Update records in a database table</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-put">PUT</span>
+                            <span class="endpoint-name">webhook_update</span>
+                        </div>
+                        <div class="endpoint-desc">Update an existing webhook configuration</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DELETE Endpoints -->
+            <div class="card">
+                <h3><span class="method-badge method-delete">DELETE</span> Delete Operations</h3>
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-delete">DELETE</span>
+                            <span class="endpoint-name">delete</span>
+                        </div>
+                        <div class="endpoint-desc">Delete records from a database table</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-delete">DELETE</span>
+                            <span class="endpoint-name">universe_delete_node</span>
+                        </div>
+                        <div class="endpoint-desc">Delete data from another microservice node in the universe</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples" class="section">
+        <div class="container">
+            <h2 class="section-title">💡 Request Examples</h2>
+
+            <div class="card">
+                <h3>Get Microservice Info</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request GET 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "info"
+}'</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Select Multiple Rows</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request GET 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "select_rows",
+    "parameters": {
+        "table": "users",
+        "fields": "*",
+        "where": "status = 1",
+        "orderby": "created_at DESC",
+        "limit": "10",
+        "groupby": ""
+    }
+}'</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Insert New Record</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request POST 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "insert",
+    "parameters": {
+        "table": "users",
+        "values": {
+            "name": "John Doe",
+            "email": "john@example.com",
+            "status": "1",
+            "created_at": "NOW()"
+        }
+    }
+}'</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Update Records</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request PUT 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "update",
+    "parameters": {
+        "table": "users",
+        "values": {
+            "name": "Jane Doe",
+            "updated_at": "NOW()"
+        },
+        "where": "id = 123"
+    }
+}'</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Delete Records</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request DELETE 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "delete",
+    "parameters": {
+        "table": "users",
+        "where": "id = 123"
+    }
+}'</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Upload File (Base64)</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request POST 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "uploadfile",
+    "parameters": {
+        "file_name": "document.pdf",
+        "local_path": "/path/to/uploads"
+    },
+    "payload": {
+        "base64": "BASE64_ENCODED_FILE_CONTENT"
+    }
+}'</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Count Rows</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request GET 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "count_rows",
+    "parameters": {
+        "table": "users",
+        "where": "status = 1"
+    }
+}'</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Database Functions Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🗄️ Database Functions</h2>
+
+            <div class="card">
+                <h3>Available Database Operations</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function</th>
+                            <th>Description</th>
+                            <th>Parameters</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>select_rows</code></td>
+                            <td>Select multiple rows with filtering</td>
+                            <td>table, fields, where, orderby, limit, groupby</td>
+                        </tr>
+                        <tr>
+                            <td><code>select_row</code></td>
+                            <td>Select a single row</td>
+                            <td>table, fields, where, orderby</td>
+                        </tr>
+                        <tr>
+                            <td><code>count_rows</code></td>
+                            <td>Count matching rows</td>
+                            <td>table, where</td>
+                        </tr>
+                        <tr>
+                            <td><code>sum_rows</code></td>
+                            <td>Sum field values</td>
+                            <td>table, field, where</td>
+                        </tr>
+                        <tr>
+                            <td><code>insert</code></td>
+                            <td>Insert new record</td>
+                            <td>table, values (associative array)</td>
+                        </tr>
+                        <tr>
+                            <td><code>update</code></td>
+                            <td>Update existing records</td>
+                            <td>table, values (associative array), where</td>
+                        </tr>
+                        <tr>
+                            <td><code>delete</code></td>
+                            <td>Delete records</td>
+                            <td>table, where</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Important:</strong> Always use proper WHERE clauses to prevent accidental mass updates or
+                deletions. The framework validates all requests and sanitizes inputs to prevent SQL injection.
+            </div>
+        </div>
+    </section>
+
+    <!-- Webhooks Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🔗 Webhooks</h2>
+
+            <div class="card">
+                <h3>Webhook Management</h3>
+                <p>PMSRAPI includes built-in webhook support for event-driven architectures. Webhooks can be registered,
+                    updated, and triggered on specific database events.</p>
+
+                <h4 style="margin-top: 1.5rem; color: var(--primary-light);">Add Webhook</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request POST 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "webhook_add",
+    "parameters": {
+        "url": "https://example.com/webhook",
+        "method": "POST",
+        "header_key": "X-Custom-Header",
+        "user": "webhook_user",
+        "pass": "webhook_password",
+        "events": ["insert", "update", "delete"]
+    }
+}'</code></pre>
+                </div>
+
+                <h4 style="margin-top: 1.5rem; color: var(--primary-light);">List Webhooks</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl --location --request GET 'http://localhost:8000/v1/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_TOKEN' \
+--data '{
+    "function": "webhooks",
+    "parameters": {
+        "method": "POST"
+    }
+}'</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">⚙️ Installation & Setup</h2>
+
+            <div class="card">
+                <h3>Requirements</h3>
+                <ul style="margin-left: 2rem; color: var(--text-secondary);">
+                    <li>Ubuntu Linux 24.10 or greater</li>
+                    <li>PHP 8.3 or greater</li>
+                    <li>PHP Extensions: mysql, mbstring, intl, xml, zip, sqlite</li>
+                    <li>Bash</li>
+                    <li>unzip utility</li>
+                    <li>Root access</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Quick Install</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>apt update
+apt upgrade -y
+apt install unzip
+mkdir /home/my_microservice
+cd /home/my_microservice
+wget -q https://github.com/ruvenss/pmsrapi/archive/refs/tags/0.0.21.zip -O "pmsrapi.zip"
+unzip -qq pmsrapi.zip && rm pmsrapi.zip
+mv pmsrapi-0.0.21/* /home/my_microservice
+./install.sh</code></pre>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>✅ Success:</strong> Follow the setup wizard to configure your microservice, database
+                    connection, and authentication tokens.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Error Codes Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">⚠️ HTTP Status Codes</h2>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="method-badge method-post">200</span></td>
+                            <td>OK</td>
+                            <td>Request successful</td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-badge method-warning">400</span></td>
+                            <td>Bad Request</td>
+                            <td>Invalid JSON or missing required parameters</td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-badge method-delete">401</span></td>
+                            <td>Unauthorized</td>
+                            <td>Invalid or missing Bearer token</td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-badge method-delete">404</span></td>
+                            <td>Not Found</td>
+                            <td>Resource or endpoint not found</td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-badge method-delete">405</span></td>
+                            <td>Method Not Allowed</td>
+                            <td>HTTP method not allowed or function not found</td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-badge method-delete">500</span></td>
+                            <td>Internal Server Error</td>
+                            <td>Server-side error or database connection issue</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 PMSRAPI - Made with ❤️ in Belgium by <a href="https://ruvenss.com/en/">Ruvenss G.
+                        Wilches</a></p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="https://github.com/ruvenss/pmsrapi">GitHub</a> |
+                    <a href="https://github.com/ruvenss/pmsrapi/wiki">Wiki</a> |
+                    <a href="https://documenter.getpostman.com/view/11469303/2sB2qf9dw7">Postman Docs</a>
+                </p>
+                <p style="margin-top: 1rem; font-size: 0.875rem;">Licensed under MIT License</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .feature-item, .endpoint-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

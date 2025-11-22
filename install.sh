@@ -13,6 +13,7 @@ fi
 CURRENT_DIR=$(pwd)
 PARENT_DIR=$(dirname "$CURRENT_DIR")
 TOKEN=$(openssl rand -base64 24 | tr -d '=+/')
+mms_server_token=$(openssl rand -base64 32 | tr -d '=+/')
 # Define the cron job command
 CRON_JOB="0 * * * * cd $CURRENT_DIR;php update.php"
 CRON_JOB_SECOND="* * * * * cd $CURRENT_DIR/v1/cron/;php second.php"
