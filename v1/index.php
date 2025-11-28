@@ -139,7 +139,9 @@ function http_rest($node, $function, $payload, $parameters, $method = "GET")
             CURLOPT_POSTFIELDS => json_encode($data_payload),
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $token
+                'Authorization: Bearer ' . $token,
+                'MicroService: ' . ms_name,
+                'MicroService-Version: ' . ms_version
             ),
         ));
         $response = curl_exec($curl);

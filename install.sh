@@ -229,8 +229,8 @@ define(\"WORKER_COUNT\", \"${WORKER_COUNT}\");
         \"GET\":[],
         \"DELETE\":[]  
     },
-    \"ms_server_token\":\"${mms_server_token}\",
-    \"ms_logserver_token\":\"${TOKEN}\",
+    \"ms_server_token\":\"${TOKEN}\",
+    \"ms_logserver_token\":\"${mms_logservertoken}\",
     \"ms_logserver_url\":\"${mms_logserver}\",
     \"env\": \"${environtment}\",
     \"local_log\": {
@@ -256,7 +256,7 @@ define(\"WORKER_COUNT\", \"${WORKER_COUNT}\");
         \"GET\":[],
         \"DELETE\":[]  
     },
-    \"ms_server_token\":\"${mms_server_token}\",
+    \"ms_server_token\":\"${TOKEN}\",
     \"ms_logserver_token\":\"${mms_logservertoken}\",
     \"ms_logserver_url\":\"${mms_logserver}\",
     \"env\": \"${environtment}\",
@@ -272,7 +272,7 @@ define(\"WORKER_COUNT\", \"${WORKER_COUNT}\");
         sleep 3
         if [ -z "$CRON_EXISTS" ]; then
             # Add the cron job
-            if dialog --title 'Database' --backtitle "PMSRAPI" --yesno "Is your service connected to MySQL or MariaDB?" 7 60; then
+            if dialog --title 'Database' --backtitle "PMSRAPI" --yesno "Do you want to enable auto update?" 7 60; then
                 (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
                 dialog --title 'CRONJOB' --infobox 'Auto Update of the framework has been added to your CRONJOBS' 7 60
                 sleep 3
