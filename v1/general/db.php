@@ -67,19 +67,19 @@ function sqlInsert($table, $fields = array(), $values = array(), ?string $ondupl
                 } else {
                     if (ms_secrets['local_log']['level'] == 'info' || ms_secrets['local_log']['level'] == 'errors')
                         sqlLog('sqlInsert', $sqlquery, 'null');
-                    return (null);
+                    return (0);
                 }
             } catch (Exception $e) {
                 if (ms_secrets['local_log']['level'] == 'errors') {
                     sqlLog('sqlInsert', $sqlquery, 'Error');
                 }
-                return (null);
+                return (0);
             }
         } else {
             if (ms_secrets['local_log']['level'] == 'errors') {
                 sqlLog('sqlInsert', $table . " fields=" . sizeof($fields) . " values=" . sizeof($values), 'Error');
             }
-            return (null);
+            return (0);
         }
     } else {
         http_response(500, ["error" => "Internal DB Server Error"]);
@@ -211,7 +211,7 @@ function sqlSelect($table, $field, $where, $orderby = "", $limit = "")
  * @param string $orderby Optional ORDER BY clause.
  * @return array Returns the selected row as an associative array or an empty array on failure.
  */
-function sqlSelectRow($table, $fields, $where, $orderby = "")
+function sqlSelectRow($table, $fields, $where, $orderby = ""): array
 {
     if (defined("dbconn")) {
         if (!empty($table) && !empty($fields)) {
@@ -244,7 +244,7 @@ function sqlSelectRow($table, $fields, $where, $orderby = "")
  * @param string $groupby Optional GROUP BY clause.
  * @return array Returns an array of selected rows as associative arrays or an empty array on failure.
  */
-function sqlSelectRows($table, $fields, $where, $orderby = "", $limit = "", $groupby = "")
+function sqlSelectRows($table, $fields, $where, $orderby = "", $limit = "", $groupby = ""): array
 {
     $rows = [];
     if (defined("dbconn")) {
@@ -266,6 +266,7 @@ function sqlSelectRows($table, $fields, $where, $orderby = "", $limit = "", $gro
                 while ($row = $result->fetch_assoc()) {
                     $rows[] = $row;
                 }
+            } else {
             }
         }
     }
@@ -283,7 +284,7 @@ function sqlSelectRows($table, $fields, $where, $orderby = "", $limit = "", $gro
  * @param string $groupby Optional GROUP BY clause.
  * @return array Returns an associative array of X and Y values or null on failure.
  */
-function sqlSelectPlot($table, $field_x, $field_y, $where = "", $orderby = "", $limit = "", $groupby = "")
+function sqlSelectPlot($table, $field_x, $field_y, $where = "", $orderby = "", $limit = "", $groupby = ""): array
 {
     $rows = [];
     if (defined("dbconn")) {
@@ -303,7 +304,7 @@ function sqlSelectPlot($table, $field_x, $field_y, $where = "", $orderby = "", $
             }
             $result = dbconn->query($sqlquery);
             if (!$result) {
-                return (null);
+                return [];
             } else {
                 while ($row = $result->fetch_assoc()) {
                     $rows[$row[$field_x]] = $row[$field_y];
@@ -323,7 +324,10 @@ function sqlCount($table, $where)
                 return 0;
             }
             while ($row = $result->fetch_assoc()) {
-                return $row['TOTAL'];
+                if (isset($row['TOTAL'])) {
+                    $total = $row['TOTAL'] ?? 0;
+                    return $total;
+                }
             }
         } else {
             return 0;
@@ -388,7 +392,7 @@ function DuplicateMySQLRecord($table, $id_field, $id)
         return 0;
     }
 }
-function sqlTableExist($table, $dbname)
+function sqlTableExist($table, $dbname): bool
 {
     if (defined("dbconn")) {
         $query = "SELECT COUNT(TABLE_NAME) AS `EXIST` FROM information_schema.TABLES WHERE table_schema = '$dbname' AND TABLE_NAME = '$table';";
@@ -403,7 +407,7 @@ function sqlTableExist($table, $dbname)
     }
     return (false);
 }
-function sqlLog($action = 'sqlInsert', $query = null, $logresult = null)
+function sqlLog($action = 'sqlInsert', $query = null, $logresult = null): bool
 {
     if (isset(ms_secrets['local_log']) && isset(ms_secrets['local_log']['path'])) {
         // Log the event locally
@@ -412,7 +416,7 @@ function sqlLog($action = 'sqlInsert', $query = null, $logresult = null)
     }
     return (true);
 }
-function getPrimaryKey($tableName)
+function getPrimaryKey($tableName): ?string
 {
     if (defined("dbconn")) {
         $sql = "SHOW KEYS FROM $tableName WHERE Key_name = 'PRIMARY'";
@@ -424,7 +428,7 @@ function getPrimaryKey($tableName)
     }
     return null;
 }
-function sqlTables()
+function sqlTables(): ?array
 {
     if (defined("dbconn")) {
         $sql = "SELECT TABLE_NAME,UPDATE_TIME FROM information_schema.tables WHERE     TABLE_SCHEMA = '" . ms_secrets['db']['name'] . "';";
@@ -476,7 +480,7 @@ function getTableLastUpdateTime($tableName)
         return null;
     }
 }
-function sqlCreateDatabase($dbname)
+function sqlCreateDatabase($dbname): bool
 {
     if (defined("dbconn")) {
         $sql = "CREATE DATABASE IF NOT EXISTS $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
