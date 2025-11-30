@@ -65,6 +65,8 @@ if (strpos($content_type, 'application/json') === 0) {
                                 }
                                 http_response(405, ["error" => "Function not declared"]);
                             }
+                        } else {
+                            http_response(400, ["error" => "Bad Request function not specified"]);
                         }
                     } else {
                         http_response(400, ["error" => "Bad Request invalid JSON"]);
@@ -78,8 +80,8 @@ if (strpos($content_type, 'application/json') === 0) {
         } else {
             http_response(401, ["error" => "Unauthorized Bearer key missing"]);
         }
-        http_response(401, ["error" => "Unauthorized you need a Bearer token in the format 'Authorization: Bearer <token>'"]);
-        http_response(401, ["error" => "Unauthorized you need a Bearer token"]);
+    } else {
+        http_response(401, ["error" => "Unauthorized Authorization header missing"]);
     }
 } else {
     http_response(400, ["error" => "Bad Request only application/json is allowed"]);

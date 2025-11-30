@@ -193,6 +193,9 @@ function sqlSelect($table, $field, $where, $orderby = "", $limit = "")
             }
             $result = dbconn->query($sqlquery);
             if ($result && $row = $result->fetch_assoc()) {
+                if ($row[$field] === null) {
+                    $row[$field] = "";
+                }
                 return mb_convert_encoding($row[$field], 'UTF-8', mb_detect_encoding($row[$field]));
             } else {
                 error_log("sqlSelect empty result : $sqlquery", 0);
