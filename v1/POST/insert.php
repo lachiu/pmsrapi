@@ -6,39 +6,40 @@
  * DO NOT MODIFY THIS FILE.
  * @author ruvenss <ruvenss@gmail.com>
  */
-function insert()
-{
-    if (!isset(request_data['parameters']['table']) || !isset(request_data['parameters']['values'])) {
-        http_response(400, ["error" => "Missing table name or values"]);
+function insert() {
+    $table   = request_data['parameters']['table']   ?? null;
+    $values  = request_data['parameters']['values']  ?? null;
+
+    if (!isset($table))      http_response(400, ["error" => "Missing table name"]);
+    if (!is_array($values))  http_response(400, ["error" => "Values and columns must be an array"]);
+    if (count($values) == 0) http_response(400, ["error" => "Values and columns must not be empty"]);
+
+    $keys   = array_keys($values);
+    $values = array_values($values);
+
+    foreach ($keys as $value) {
+        if (!is_string($value)) http_response(400, ["error" => "Values and columns must be an associative array"]);
     }
-    if (!is_array(request_data['parameters']['values'])) {
-        http_response(400, ["error" => "Values and Columns must be an array"]);
-    }
-    if (count(request_data['parameters']['values']) == 0) {
-        http_response(400, ["error" => "Values and Columns must not be empty"]);
-    }
-    $values_keys = request_data['parameters']['values'];
-    foreach ($values_keys as $key => $value) {
-        if (!is_string($key)) {
-            http_response(400, ["error" => "Values and Columns must be an associative array"]);
-        }
-        $keys[] = $key;
-        $values[] = $value;
-    }
-    $new_id = sqlInsert(request_data['parameters']['table'], $keys, $values);
+
+    $new_id = sqlInsert($table, $keys, $values);
+    
     define("new_id", $new_id);
-    define("keys", $keys);
+    define("keys",   $keys);
     define("values", $values);
-    define("table", request_data['parameters']['table']);
+    define("table",  $table);
+
+    $new_row = null;
+
     if (new_id > 0) {
-        $primary_key = getPrimaryKey(request_data['parameters']['table']);
-        $new_row = sqlSelectRow(request_data['parameters']['table'], "*", "`$primary_key` = " . new_id);
-    } else {
-        $new_row = null;
+        $primary_key = getPrimaryKey($table);
+        $new_row = sqlSelectRow($table, "*", "`$primary_key` = " . new_id);
     }
-    $last_update = getTableLastUpdateTime(request_data['parameters']['table']);
+
+    $last_update = getTableLastUpdateTime($table);
+    
     include_once getcwd() . '/' . request_method . '/events.php';
     after_insert($new_row);
+    
     http_response(200, ["values" => ["new_id" => new_id], "table_last_update" => $last_update, "new_row" => $new_row]);
 }
 insert();

@@ -6,9 +6,12 @@
  * DO NOT MODIFY THIS FILE.
  * @author ruvenss <ruvenss@gmail.com>
  */
-function count_rows()
-{
-    $count = sqlCount(request_data['parameters']['table'], request_data['parameters']['where']);
-    http_response(200, ["values" => ["total" => $count], "table_last_update" => getTableLastUpdateTime(request_data['parameters']['table'])]);
+function count_rows() {
+    $table = request_data['parameters']['table'] ?? null;
+    $where = request_data['parameters']['where'] ?? null;
+    
+    $count = sqlCount($table, $where);
+    http_response(200, ["values" => ["total" => $count], "table_last_update" => getTableLastUpdateTime($table)]);
 }
+
 count_rows();

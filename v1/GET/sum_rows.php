@@ -6,9 +6,11 @@
  * DO NOT MODIFY THIS FILE.
  * @author ruvenss <ruvenss@gmail.com>
  */
-function sum_rows()
-{
-    $sum = sqlSum(request_data['parameters']['table'], request_data['parameters']['field'], request_data['parameters']['where']);
-    http_response(200, ["values" => ["total" => $sum], "table_last_update" => getTableLastUpdateTime(request_data['parameters']['table'])]);
+function sum_rows() {
+    $table = request_data['parameters']['table'] ?? null;
+    $field = request_data['parameters']['field'] ?? null;
+    $where = request_data['parameters']['where'] ?? null;
+    $sum = sqlSum($table, $field, $where);
+    http_response(200, ["values" => ["total" => $sum], "table_last_update" => getTableLastUpdateTime($table)]);
 }
 sum_rows();

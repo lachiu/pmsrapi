@@ -1,11 +1,10 @@
 <?php
-function select_multi_table_rows()
-{
-    $tables = request_data['parameters']['tables'];
-    $fields = request_data['parameters']['fields'];
-    $where = request_data['parameters']['where'];
-    $orderby = request_data['parameters']['orderby'];
-    $limit = request_data['parameters']['limit'];
+function select_multi_table_rows() {
+    $tables = request_data['parameters']['tables'] ?? null;
+    $fields = request_data['parameters']['fields'] ?? null;
+    $where = request_data['parameters']['where'] ?? null;
+    $orderby = request_data['parameters']['orderby'] ?? null;
+    $limit = request_data['parameters']['limit'] ?? null;
     $tablerows = [];
     $rows = [];
     foreach ($tables as $table) {
@@ -19,4 +18,5 @@ function select_multi_table_rows()
     }
     http_response(200, ["values" => ["rows" => $rows]]);
 }
+
 select_multi_table_rows();

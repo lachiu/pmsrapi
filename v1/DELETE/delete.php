@@ -5,17 +5,16 @@
  * DO NOT MODIFY THIS FILE.
  * @author ruvenss <ruvenss@gmail.com>
  */
-function delete()
-{
-    if (!isset(request_data['parameters']['table']) || !isset(request_data['parameters']['where'])) {
-        http_response(400, ["error" => "Missing table or where"]);
-    }
-    if (!isset(request_data['parameters']['where'])) {
-        http_response(400, ["error" => "Missing where "]);
-    }
-    if (sqlDelete(request_data['parameters']['table'], request_data['parameters']['where'])) {
+function delete() {
+    $table = request_data['parameters']['table'] ?? null;
+    $where = request_data['parameters']['where'] ?? null;
+
+    if (!isset($table)) http_response(400, ["error" => "Missing table"]);
+    if (!isset($where)) http_response(400, ["error" => "Missing where"]);
+    
+    if (sqlDelete($table, $where)) {
         $affectedRows = dbconn->affected_rows;
-        $last_update = getTableLastUpdateTime(request_data['parameters']['table']);
+        $last_update = getTableLastUpdateTime($table);
         include_once getcwd() . '/' . request_method . '/events.php';
         http_response(200, ["values" => [], "table_last_update" => $last_update, "affected_rows" => $affectedRows]);
     } else {
